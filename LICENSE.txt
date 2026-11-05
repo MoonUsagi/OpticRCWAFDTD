@@ -1,0 +1,33 @@
+OpticRCWAFDTD Toolbox License
+
+Copyright (c) 2026 Fred Liu
+All rights reserved, except as granted below.
+
+1. Grant. Permission is granted, free of charge, to any person obtaining
+   a copy of this software (the "Software") to use it for any purpose,
+   including commercial purposes, and to copy and redistribute complete,
+   unmodified copies of the Software, provided this license accompanies
+   every copy.
+
+2. Source files. Files distributed in source form (MATLAB .m files other
+   than help-only stubs of protected files) may be modified for your own
+   use. Modified versions may be redistributed only if they are clearly
+   marked as modified and keep this license.
+
+3. Protected files. Files distributed in protected form (MATLAB .p files)
+   may not be decompiled, deobfuscated, reverse engineered or modified,
+   and may not be redistributed separately from the Software.
+
+4. Results. The Software produces numerical simulations. You are
+   responsible for validating results before relying on them, in
+   particular for design, manufacturing or safety-related decisions.
+
+5. No warranty. THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY
+   KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+   IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+   CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+   TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+6. Termination. This license terminates automatically if you breach it.
