@@ -11,8 +11,9 @@
 
 <p align="center">
   <img src="https://img.shields.io/badge/MATLAB-R2023a%2B-blue" alt="MATLAB R2023a+">
-  <img src="https://img.shields.io/badge/version-0.1.0-green" alt="version 0.1.0">
-  <img src="https://img.shields.io/badge/tests-114%20passing-brightgreen" alt="114 tests">
+  <a href="https://www.mathworks.com/matlabcentral/fileexchange/185170-opticrcwafdtd-rcwa-fdtd-and-mode-solvers"><img src="https://www.mathworks.com/matlabcentral/images/matlab-file-exchange.svg" alt="View OpticRCWAFDTD on File Exchange"></a>
+  <img src="https://img.shields.io/badge/version-0.2.0-green" alt="version 0.2.0">
+  <img src="https://img.shields.io/badge/tests-124%20passing-brightgreen" alt="124 tests">
   <img src="https://img.shields.io/badge/RCWA%20vs%20RETICOLO-1e--12-orange" alt="RETICOLO 1e-12">
 </p>
 
@@ -24,6 +25,8 @@ validated against exact references and an independent code.
 
 以 MATLAB 實作的嚴格電磁數值求解器，內建 **超穎透鏡（metalens）** 與
 **矽光子光纖耦合（CPO）** 設計流程。每個求解器都經過精確解與外部程式交叉驗證。
+
+**New here? · 第一次使用？** Follow the step-by-step [Tutorial · 使用教學](docs/TUTORIAL.md).
 
 **Contents · 目錄**：
 [Apps 介面](#apps--圖形介面) ·
@@ -115,7 +118,7 @@ One run takes about 45 s on a GPU.
 | **Geometry** | Rectangles, circles, polygons; sloped sidewalls (`orf.slantedLayers`, cones, trapezoidal grooves) | 矩形、圓、多邊形；斜側壁（`orf.slantedLayers`、圓錐、梯形溝槽） |
 | **Run control** | Progress callbacks with cancel, resource estimates, automatic RCWA convergence | 進度回呼與取消、資源估算、RCWA 自動收斂 |
 | **Design files** | `orf.saveDesign` / `orf.loadDesign`: structures and parameters in JSON | 結構與參數存成 JSON，讀回即可模擬 |
-| **Layout** | GDSII export and import (`orf.gdsRead`), no external tools | GDSII 輸出與匯入（`orf.gdsRead`），不需外部工具 |
+| **Layout** | GDSII export and import (`orf.gdsRead`: polygons, paths, references), no external tools | GDSII 輸出與匯入（`orf.gdsRead`：多邊形、路徑、參照），不需外部工具 |
 
 All functions live in the `orf` namespace: `orf.rcwa2D`, `orf.fdtd3D`, `orf.tmm`, …
 Type `help orf` for the full list.
@@ -139,10 +142,10 @@ Shown: an a-Si pillar on glass at 940 nm (`examples/rcwa_fields_pillar.m`, about
 
 ## Validation · 驗證
 
-Every solver is checked against an exact reference; 114 automated tests ship with
+Every solver is checked against an exact reference; 124 automated tests ship with
 the toolbox (`runAllTests`).
 
-每個求解器都對照精確參考值驗證；toolbox 附 114 項自動測試（`runAllTests`）。
+每個求解器都對照精確參考值驗證；toolbox 附 124 項自動測試（`runAllTests`）。
 
 | Check | 驗證項目 | Reference · 參考 | Agreement · 誤差 |
 |---|---|---|---|
@@ -163,8 +166,8 @@ the toolbox (`runAllTests`).
 
 | Method | English | 中文 |
 |---|---|---|
-| **Add-On Explorer** | In MATLAB: *Home → Add-Ons*, search *OpticRCWAFDTD*, click *Add* | MATLAB：*首頁 → 附加元件*，搜尋 *OpticRCWAFDTD*，按 *Add* |
-| **Toolbox file** | Download `OpticRCWAFDTD_0.1.0.mltbx` from *Releases* and double-click it | 從 *Releases* 下載 `OpticRCWAFDTD_0.1.0.mltbx` 後雙擊 |
+| **Add-On Explorer** | In MATLAB: *Home → Add-Ons*, search *OpticRCWAFDTD*, click *Add* ([File Exchange page](https://www.mathworks.com/matlabcentral/fileexchange/185170-opticrcwafdtd-rcwa-fdtd-and-mode-solvers)) | MATLAB：*首頁 → 附加元件*，搜尋 *OpticRCWAFDTD*，按 *Add*（[File Exchange 頁面](https://www.mathworks.com/matlabcentral/fileexchange/185170-opticrcwafdtd-rcwa-fdtd-and-mode-solvers)） |
+| **Toolbox file** | Download the `.mltbx` from [Releases](https://github.com/MoonUsagi/OpticRCWAFDTD/releases) and double-click it | 從 [Releases](https://github.com/MoonUsagi/OpticRCWAFDTD/releases) 下載 `.mltbx` 後雙擊 |
 | **From source** | Clone this repository and run `setupPaths` | clone 本 repo 後執行 `setupPaths` |
 
 **Requirements · 系統需求**
@@ -212,6 +215,13 @@ library and FDTD, each with a plot.
 | Script | What it does | 內容 | Time* |
 |---|---|---|---|
 | `GettingStarted.m` | Tour of all solvers | 所有求解器導覽 | 15 s |
+| `materials_dispersion.m` | Built-in, Tauc–Lorentz and tabulated materials | 內建、Tauc–Lorentz 與表格材料 | 3 s |
+| `metalens_tio2_visible.m` | 532 nm TiO2 metalens, parameters to GDSII | 532 nm TiO2 超穎透鏡，從參數到 GDSII | 5 s |
+| `metasurface_pb_phase.m` | Geometric (PB) phase of rotated TiO2 nanofins | 旋轉 TiO2 奈米鰭的幾何相位 | 15 s |
+| `sidewall_angle_study.m` | Phase error from sloped pillar sidewalls | 斜側壁造成的相位誤差 | 10 s |
+| `gmr_filter.m` | Guided-mode resonance filter, angle map | 導模共振濾波器與角度圖 | 30 s |
+| `waveguide_modes_soi.m` | SOI strip modes, single-mode width, group index | SOI 波導模態、單模寬度、群折射率 | 15 s |
+| `workflow_scripting.m` | Estimates, auto-convergence, cancel, batch app runs | 估算、自動收斂、取消、批次執行介面 | ~1 min |
 | `metalens_unitcell_940nm.m` | a-Si pillar phase library with convergence check | a-Si 柱相位庫與收斂檢查 | ~3 min |
 | `metalens_demo_940nm.m` | 40 µm metalens: library, layout, focal spot | 40 µm 超穎透鏡：相位庫、排列、焦點 | ~3 min |
 | `metalens_fullwave_3d.m` | 3D FDTD of a metalens vs RCWA + LPA | 超穎透鏡三維 FDTD 對照 RCWA + 局部週期近似 | 5 min (GPU) |
@@ -242,8 +252,8 @@ See [`docs/CONVENTIONS.md`](docs/CONVENTIONS.md).
 |---|---|---|
 | **Materials** | Built-in SiO2, Si (> 1.2 µm), Si3N4, TiO2 (rutile), Al2O3; others via `orf.materialTable` or `orf.materialTaucLorentz`. No metals yet; FDTD has no dispersive (Drude/Lorentz) media. | 內建 SiO2、Si（> 1.2 µm）、Si3N4、TiO2（金紅石）、Al2O3；其他材料用 `orf.materialTable` 或 `orf.materialTaucLorentz`。尚無內建金屬；FDTD 尚不支援色散介質。 |
 | **Geometry** | RCWA: rectangles, circles, polygons. 3D FDTD: boxes, cylinders, cones, polygon prisms, pillar lattices. | RCWA：矩形、圓、多邊形。三維 FDTD：方塊、圓柱、圓錐、多邊形柱、柱陣列。 |
-| **GDSII import** | Polygons and references; PATH elements are skipped. Set layer numbers to your PDK. | 讀取多邊形與參照；PATH 元素略過。圖層編號需依你的 PDK 設定。 |
-| **Apps** | One wavelength, constant refractive index; uniform gratings only (apodized: `orf.optimizeGratingCoupler`). | 單一波長、固定折射率；光柵介面只做均勻光柵（漸變設計用 `orf.optimizeGratingCoupler`）。 |
+| **GDSII import** | Polygons, paths (mitred corners) and references; text is skipped. Set layer numbers to your PDK. | 讀取多邊形、路徑（斜接轉角）與參照；文字略過。圖層編號需依你的 PDK 設定。 |
+| **Apps** | One wavelength per run (materials are evaluated there); uniform gratings only (apodized: `orf.optimizeGratingCoupler`). | 每次計算單一波長（材料在該波長取值）；光柵介面只做均勻光柵（漸變設計用 `orf.optimizeGratingCoupler`）。 |
 | **Grating couplers** | 2D simulation; 3D couplers need a large GPU. | 二維模擬；三維耦合器需要大記憶體 GPU。 |
 | **Cross-checks** | RCWA matches RETICOLO to round-off; Meep comparison in progress. | RCWA 與 RETICOLO 吻合到捨入誤差；與 Meep 的對照進行中。 |
 
@@ -255,5 +265,7 @@ Free to use, including commercially. Files distributed as source (`.m`) may be
 modified; protected files (`.p`) may not be decompiled or reverse engineered.
 See [`LICENSE.txt`](LICENSE.txt).
 
+Questions and bug reports: [GitHub Issues](https://github.com/MoonUsagi/OpticRCWAFDTD/issues).
+
 可免費使用，包含商業用途。以原始碼（`.m`）發布的檔案可以修改；受保護檔案（`.p`）
-不得反編譯或逆向工程。詳見 [`LICENSE.txt`](LICENSE.txt)。
+不得反編譯或逆向工程。詳見 [`LICENSE.txt`](LICENSE.txt)。問題與錯誤回報請到 [GitHub Issues](https://github.com/MoonUsagi/OpticRCWAFDTD/issues)。

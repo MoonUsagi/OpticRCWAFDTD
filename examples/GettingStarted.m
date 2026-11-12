@@ -78,7 +78,13 @@ xlabel('wavelength [\mum]'); ylabel('reflectance'); legend('TMM', 'FDTD');
 title(sprintf('FDTD vs TMM: max difference %.1e', max(abs(Rf - Rt))));
 
 %% Next steps
+% * |docs/TUTORIAL.md| - step-by-step guide (English and Chinese)
 % * |orf.MetalensDesigner| and |orf.GratingCouplerDesigner| - the same flows as apps
+% * |examples/materials_dispersion.m| - built-in, measured and Tauc-Lorentz materials
+% * |examples/metalens_tio2_visible.m| - visible metalens from parameters to GDSII
+% * |examples/metasurface_pb_phase.m| - geometric phase of rotated nanofins
+% * |examples/gmr_filter.m|, |examples/waveguide_modes_soi.m|,
+%   |examples/sidewall_angle_study.m|, |examples/workflow_scripting.m|
 % * |examples/rcwa_fields_pillar.m| - the field inside a metalens unit cell
 % * |examples/metalens_demo_940nm.m| - full metalens: library, layout, focus
 % * |examples/metalens_fullwave_3d.m| - 3D FDTD of a metalens vs RCWA+LPA

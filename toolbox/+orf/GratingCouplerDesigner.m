@@ -7,6 +7,8 @@
 %     Sweep period  five runs around the current period, keeps the best
 %     Save / Load   the parameters as a design file (orf.saveDesign)
 %     Export GDS    the grating with its taper (orf.gratingToGDS)
+%   Si, BOX and cladding take an index or a built-in material name (Si,
+%   SiO2, Si3N4, ...), evaluated at the design wavelength.
 %   For apodized designs use orf.optimizeGratingCoupler (hours of FDTD).
 %   app = orf.GratingCouplerDesigner(Visible=false) builds it hidden;
 %   app.params / setParams / run / estimate work without the UI.

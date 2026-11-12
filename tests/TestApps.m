@@ -40,6 +40,35 @@ classdef TestApps < matlab.unittest.TestCase
         end
     end
 
+    methods (Test)
+        function appsAcceptMaterialNames(tc)
+            app = orf.MetalensDesigner(Visible=false);
+            tc.addTeardown(@() delete(app));
+            p = app.params();
+            p.lambda0 = 0.532; p.pillar = orf.material("TiO2"); p.substrate = orf.material("SiO2");
+            app.setParams(p);
+            q = app.params();
+            tc.verifyEqual(q.pillar.nk(0.532), orf.material("TiO2").nk(0.532));
+            tc.verifyEqual(q.substrate.spec.name, "SiO2");
+            % a measured material (Tauc-Lorentz) survives the fields unchanged
+            aSi = orf.materialTaucLorentz(120, 3.6, 2.4, 1.6, 1.0, Name="aSi");
+            p.lambda0 = 0.94; p.pillar = aSi; app.setParams(p);
+            q = app.params();
+            tc.verifyEqual(q.pillar.nk(0.94), aSi.nk(0.94));
+            tc.verifyError(@() orf.MetalensDesigner.parseMaterial("unobtainium", "pillar"), ...
+                'orf:MetalensDesigner:material');
+            % grating coupler: names evaluated at the design wavelength
+            gc = orf.GratingCouplerDesigner(Visible=false);
+            tc.addTeardown(@() delete(gc));
+            g = gc.params(); g.materials = struct('nSi', "Si", 'nBox', "SiO2");
+            gc.setParams(g);
+            h = gc.params();
+            tc.verifyEqual(h.nSi, real(orf.material("Si").nk(h.lambda0)));
+            tc.verifyEqual(h.nBox, real(orf.material("SiO2").nk(h.lambda0)));
+            tc.verifyEqual(h.materials.nSi, "Si");
+        end
+    end
+
     methods (Test, TestTags = {'Slow'})
         function gratingCouplerDesignerRuns(tc)
             app = orf.GratingCouplerDesigner(Visible=false);

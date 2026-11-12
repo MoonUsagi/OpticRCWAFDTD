@@ -1,5 +1,5 @@
 % OpticRCWAFDTD  RCWA, FDTD and mode solvers for metalenses and fiber couplers
-% Version 0.1.0
+% Version 0.2.0
 %
 % Call every function with the orf prefix, e.g. orf.rcwa2D. Start with
 % orf.checkEnvironment and examples/GettingStarted.m.
@@ -75,7 +75,7 @@
 %   orf.loadDesign              - Read a design saved by orf.saveDesign.
 %
 % Layout (GDSII export and import)
-%   orf.gdsWrite                - Write a GDSII stream file (polygons and cell references).
+%   orf.gdsWrite                - Write a GDSII stream file (polygons, paths and cell references).
 %   orf.metalensToGDS           - Write a metalens pillar layout to GDSII.
 %   orf.gratingToGDS            - Write a (uniform or apodized) 1D grating coupler to GDSII.
 %   orf.gdsRead                 - Read a GDSII stream file.

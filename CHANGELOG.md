@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.2.0 — materials in the apps, GDS paths, tutorial and new examples
+
+- Apps: pillar, substrate, Si, BOX and cladding accept a built-in material
+  name (`TiO2`, `Si3N4`, `SiO2`, `Si`, ...) as well as an index; design files
+  with measured materials (`orf.materialTable`, `orf.materialTaucLorentz`)
+  load into the Metalens Designer unchanged.
+- GDSII: `orf.gdsRead` converts PATH elements (waveguides, wires) to polygons
+  (mitred joins; flush, round, extended or custom ends); `orf.gdsWrite`
+  writes paths (`cells.paths`).
+- Tutorial: `docs/TUTORIAL.md`, step-by-step in English and Traditional Chinese.
+- New examples: `materials_dispersion.m`, `waveguide_modes_soi.m`,
+  `metasurface_pb_phase.m` (geometric phase of TiO2 nanofins),
+  `sidewall_angle_study.m`, `gmr_filter.m` (guided-mode resonance filter),
+  `metalens_tio2_visible.m` (532 nm metalens to GDSII),
+  `workflow_scripting.m` (estimates, convergence, cancelling, batch runs).
 ## 0.1.0 — first public preview
 
 - Solvers: TMM; RCWA 1D/2D (Li factorization, batching, mirror-symmetry

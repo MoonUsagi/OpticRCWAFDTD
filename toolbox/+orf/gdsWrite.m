@@ -7,6 +7,10 @@ function gdsWrite(file, cells, opts)
 %                closed; closed automatically; at most 8190 vertices)
 %     layers   : layer number per polygon (scalar or vector), 0-255
 %     datatype : datatype per polygon (default 0)
+%     paths    : optional struct array of PATH elements (waveguides, wires)
+%                with fields xy (K x 2 centre line, um), width (um) and
+%                optionally layer, datatype, pathtype (0 flush ends,
+%                1 round, 2 square ends extended by width/2)
 %     refs     : optional struct array with fields cell (name of another
 %                cell) and xy (K x 2 placements in um) -> SREF records
 %   The last cell is usually the top cell that references the others.
@@ -52,6 +56,17 @@ for c = 1:numel(cells)
         rec(fid, 0x0D02, int16(layers(p)));                     % LAYER
         rec(fid, 0x0E02, int16(dtypes(p)));                     % DATATYPE
         rec(fid, 0x1003, reshape(xy.', 1, []));                 % XY
+        rec(fid, 0x1100, []);                                   % ENDEL
+    end
+    paths = getf(cl, 'paths', struct('xy', {}, 'width', {}));
+    for p = 1:numel(paths)
+        pa = paths(p);
+        rec(fid, 0x0900, []);                                   % PATH
+        rec(fid, 0x0D02, int16(getf(pa, 'layer', 0)));          % LAYER
+        rec(fid, 0x0E02, int16(getf(pa, 'datatype', 0)));       % DATATYPE
+        rec(fid, 0x2102, int16(getf(pa, 'pathtype', 0)));       % PATHTYPE
+        rec(fid, 0x0F03, toDb(pa.width));                       % WIDTH
+        rec(fid, 0x1003, reshape(toDb(pa.xy).', 1, []));        % XY
         rec(fid, 0x1100, []);                                   % ENDEL
     end
     refs = getf(cl, 'refs', struct('cell', {}, 'xy', {}));

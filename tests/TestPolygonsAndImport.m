@@ -19,6 +19,27 @@ classdef TestPolygonsAndImport < matlab.unittest.TestCase
     end
 
     methods (Test)
+        function gdsPathsBecomePolygons(tc)
+            % an L-shaped waveguide path: mitred area = width x centre-line
+            % length; square ends add width^2/2 each, round ends a circle
+            xy = [0 0; 10 0; 10 5]; w = 1;
+            f = fullfile(tc.Dir, "path.gds");
+            paths = struct('xy', {xy, xy, xy, [0 0; 3 4]}, 'width', {w, w, w, 0.5}, ...
+                'pathtype', {0, 2, 1, 0}, 'layer', {1, 2, 3, 4});
+            orf.gdsWrite(f, struct('name', "WG", 'polygons', {{}}, 'paths', paths));
+            lib = orf.gdsRead(f);
+            [P, L] = orf.gdsFlatten(lib);
+            tc.verifyEqual(L, [1 2 3 4]);
+            A = cellfun(@(p) polyarea(p(:, 1), p(:, 2)), P);
+            n = 32;                                                 % 2 x 16-segment caps
+            tc.verifyEqual(A(1), 15, 'AbsTol', 1e-9);
+            tc.verifyEqual(A(2), 16, 'AbsTol', 1e-9);
+            tc.verifyEqual(A(3), 15 + n / 2 * 0.25 * sin(2 * pi / n), 'AbsTol', 1e-9);
+            tc.verifyEqual(A(4), 2.5, 'AbsTol', 1e-9);              % diagonal segment
+            tc.verifyEqual(max(P{1}), [10.5 5], 'AbsTol', 1e-12);   % flush end at y = 5
+            tc.verifyEqual(min(P{2}), [-0.5 -0.5], 'AbsTol', 1e-12);
+        end
+
         function polygonEqualsRectangle(tc)
             % a square polygon (also rotated by 90 deg) samples exactly like
             % the rectangle on the same grid

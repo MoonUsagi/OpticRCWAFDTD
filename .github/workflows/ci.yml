@@ -1,0 +1,18 @@
+# Runs the fast test suite on every push and pull request.
+# Uses the official MathWorks GitHub Actions (free for public repositories).
+name: tests
+on: [push, pull_request]
+jobs:
+  test:
+    strategy:
+      matrix:
+        release: [R2023a, latest]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: matlab-actions/setup-matlab@v2
+        with:
+          release: ${{ matrix.release }}
+      - uses: matlab-actions/run-command@v2
+        with:
+          command: results = runAllTests("fast"); assert(~any([results.Failed]))
