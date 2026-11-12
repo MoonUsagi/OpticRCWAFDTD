@@ -1,5 +1,5 @@
 % OpticRCWAFDTD  RCWA, FDTD and mode solvers for metalenses and fiber couplers
-% Version 0.2.0
+% Version 0.3.0
 %
 % Call every function with the orf prefix, e.g. orf.rcwa2D. Start with
 % orf.checkEnvironment and examples/GettingStarted.m.
@@ -62,6 +62,10 @@
 %   orf.bestFiberCoupling       - Best fiber position/angle for a grating-coupler run.
 %   orf.apodizedGrating         - Linearly apodized fill factor with phase-matched periods.
 %   orf.optimizeGratingCoupler  - Uniform grid scan, then Nelder-Mead on an apodized design.
+%
+% Inverse design
+%   orf.fdfd2D                  - Frequency-domain 2D TE solver (E_y in the x-z plane) with adjoint.
+%   orf.inverseDesignGratingCoupler - Adjoint inverse design of a 2D grating coupler.
 %
 % Apps and run control
 %   orf.MetalensDesigner        - Interactive metalens design: library, layout, focus.

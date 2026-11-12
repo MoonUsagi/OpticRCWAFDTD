@@ -12,8 +12,8 @@
 <p align="center">
   <img src="https://img.shields.io/badge/MATLAB-R2023a%2B-blue" alt="MATLAB R2023a+">
   <a href="https://www.mathworks.com/matlabcentral/fileexchange/185170-opticrcwafdtd-rcwa-fdtd-and-mode-solvers"><img src="https://www.mathworks.com/matlabcentral/images/matlab-file-exchange.svg" alt="View OpticRCWAFDTD on File Exchange"></a>
-  <img src="https://img.shields.io/badge/version-0.2.0-green" alt="version 0.2.0">
-  <img src="https://img.shields.io/badge/tests-124%20passing-brightgreen" alt="124 tests">
+  <img src="https://img.shields.io/badge/version-0.3.0-green" alt="version 0.3.0">
+  <img src="https://img.shields.io/badge/tests-129%20passing-brightgreen" alt="129 tests">
   <img src="https://img.shields.io/badge/RCWA%20vs%20RETICOLO-1e--12-orange" alt="RETICOLO 1e-12">
 </p>
 
@@ -113,6 +113,7 @@ One run takes about 45 s on a GPU.
 | **FDTD** | 2D (TE/TM) and 3D, CPML, unidirectional mode sources, plane DFT monitors, subpixel averaging, optional GPU | 二維（TE/TM）與三維、CPML 吸收邊界、單向模態光源、平面 DFT 監測、次像素平均、可選 GPU |
 | **Mode solvers** | 1D slab (TE/TM) and full-vector 2D cross-section | 一維平板波導（TE/TM）與二維截面全向量模態 |
 | **Metalens flow** | Phase library → layout → focal spot; 3D full-wave check of the local periodic approximation | 相位庫 → 排列 → 焦點；以三維全波模擬驗證局部週期近似 |
+| **Inverse design** | Adjoint optimisation of grating couplers: every mask pixel and the fiber position, minimum feature size, single etch or poly-Si overlay (-0.58 dB, FDTD-checked) | 以 adjoint 方法反向設計光柵耦合器：每個光罩像素與光纖位置都是變數，含最小線寬；單蝕刻或多晶矽覆蓋層（−0.58 dB，經 FDTD 驗證） |
 | **CPO flow** | SOI grating coupler with fiber overlap, apodization and optimisation | SOI 光柵耦合器：光纖模態重疊、漸變設計與最佳化 |
 | **Materials** | SiO2, Si, Si3N4, TiO2, Al2O3 from published data; Tauc–Lorentz for amorphous films (a-Si) | SiO2、Si、Si3N4、TiO2、Al2O3 文獻色散資料；非晶薄膜（a-Si）用 Tauc–Lorentz 模型 |
 | **Geometry** | Rectangles, circles, polygons; sloped sidewalls (`orf.slantedLayers`, cones, trapezoidal grooves) | 矩形、圓、多邊形；斜側壁（`orf.slantedLayers`、圓錐、梯形溝槽） |
@@ -142,10 +143,10 @@ Shown: an a-Si pillar on glass at 940 nm (`examples/rcwa_fields_pillar.m`, about
 
 ## Validation · 驗證
 
-Every solver is checked against an exact reference; 124 automated tests ship with
+Every solver is checked against an exact reference; 129 automated tests ship with
 the toolbox (`runAllTests`).
 
-每個求解器都對照精確參考值驗證；toolbox 附 124 項自動測試（`runAllTests`）。
+每個求解器都對照精確參考值驗證；toolbox 附 129 項自動測試（`runAllTests`）。
 
 | Check | 驗證項目 | Reference · 參考 | Agreement · 誤差 |
 |---|---|---|---|
@@ -156,6 +157,8 @@ the toolbox (`runAllTests`).
 | RCWA, sub-wavelength grating | RCWA 次波長光柵 | effective medium · 等效介質 | TE 8e-7, TM 1.2e-4 |
 | **RCWA ↔ FDTD, 2D grating** | **RCWA ↔ FDTD 二維光柵** | independent solvers · 獨立求解器 | < 2e-3 |
 | **RCWA ↔ FDTD, 3D pillar array** | **RCWA ↔ FDTD 三維柱陣列** | independent solvers · 獨立求解器 | 3e-4 |
+| **FDFD ↔ FDTD, grating coupler** | **FDFD ↔ FDTD 光柵耦合器** | same grid, independent solvers · 同網格、獨立求解器 | 1e-4 |
+| Adjoint gradient (inverse design) | adjoint 梯度（反向設計） | central finite differences · 中央差分 | 2e-7 |
 | FDTD guided-mode index | FDTD 導模有效折射率 | exact Yee-grid dispersion · Yee 網格精確色散 | 2D 2e-6, 3D < 1e-4 |
 | RCWA fields | RCWA 場分佈 | analytic slab; flux = T · 解析平板；能流守恆 | 1e-15; 1e-10 |
 | 2D mode solver, SOI 500×220 nm | 二維模態求解器，SOI 500×220 nm | literature 2.44–2.45 · 文獻值 | TE0 = 2.4464 |
@@ -221,6 +224,7 @@ library and FDTD, each with a plot.
 | `sidewall_angle_study.m` | Phase error from sloped pillar sidewalls | 斜側壁造成的相位誤差 | 10 s |
 | `gmr_filter.m` | Guided-mode resonance filter, angle map | 導模共振濾波器與角度圖 | 30 s |
 | `waveguide_modes_soi.m` | SOI strip modes, single-mode width, group index | SOI 波導模態、單模寬度、群折射率 | 15 s |
+| `inverse_design_grating_coupler.m` | Adjoint inverse design: 70 nm etch vs poly-Si overlay, FDTD check, GDSII | adjoint 反向設計：單蝕刻與多晶矽覆蓋層比較、FDTD 驗證、GDSII | ~10 min |
 | `workflow_scripting.m` | Estimates, auto-convergence, cancel, batch app runs | 估算、自動收斂、取消、批次執行介面 | ~1 min |
 | `metalens_unitcell_940nm.m` | a-Si pillar phase library with convergence check | a-Si 柱相位庫與收斂檢查 | ~3 min |
 | `metalens_demo_940nm.m` | 40 µm metalens: library, layout, focal spot | 40 µm 超穎透鏡：相位庫、排列、焦點 | ~3 min |
@@ -255,6 +259,7 @@ See [`docs/CONVENTIONS.md`](docs/CONVENTIONS.md).
 | **GDSII import** | Polygons, paths (mitred corners) and references; text is skipped. Set layer numbers to your PDK. | 讀取多邊形、路徑（斜接轉角）與參照；文字略過。圖層編號需依你的 PDK 設定。 |
 | **Apps** | One wavelength per run (materials are evaluated there); uniform gratings only (apodized: `orf.optimizeGratingCoupler`). | 每次計算單一波長（材料在該波長取值）；光柵介面只做均勻光柵（漸變設計用 `orf.optimizeGratingCoupler`）。 |
 | **Grating couplers** | 2D simulation; 3D couplers need a large GPU. | 二維模擬；三維耦合器需要大記憶體 GPU。 |
+| **Inverse design** | Grating couplers in 2D (TE). The dual-etch process is experimental: its optimum needs features below 100 nm. | 目前為二維（TE）光柵耦合器。雙蝕刻製程為實驗功能：其最佳解需要小於 100 nm 的特徵。 |
 | **Cross-checks** | RCWA matches RETICOLO to round-off; Meep comparison in progress. | RCWA 與 RETICOLO 吻合到捨入誤差；與 Meep 的對照進行中。 |
 
 ---

@@ -14,8 +14,9 @@ given in English and then in Traditional Chinese.
 5. [Build your own structure in code · 用程式建立自己的結構](#5-build-your-own-structure-in-code--用程式建立自己的結構)
 6. [Materials · 材料](#6-materials--材料)
 7. [Import a GDSII layout · 匯入 GDSII 佈局](#7-import-a-gdsii-layout--匯入-gdsii-佈局)
-8. [Which example should I read? · 該看哪個範例](#8-which-example-should-i-read--該看哪個範例)
-9. [Troubleshooting · 常見問題](#9-troubleshooting--常見問題)
+8. [Inverse design · 反向設計](#8-inverse-design--反向設計)
+9. [Which example should I read? · 該看哪個範例](#9-which-example-should-i-read--該看哪個範例)
+10. [Troubleshooting · 常見問題](#10-troubleshooting--常見問題)
 
 ---
 
@@ -231,7 +232,39 @@ PATH 元件（波導、導線）會轉成斜接轉角的多邊形。輸出佈局
 
 ---
 
-## 8. Which example should I read? · 該看哪個範例
+## 8. Inverse design · 反向設計
+
+Instead of choosing a period and fill factor, let the optimiser choose every
+pixel of the etch pattern. `orf.inverseDesignGratingCoupler` uses the adjoint
+method: per wavelength, one frequency-domain solve (`orf.fdfd2D`) and one
+adjoint solve give the gradient for all pixels at once.
+
+不再手動選週期與填充率，而是讓最佳化器決定蝕刻圖案的每個像素。`orf.inverseDesignGratingCoupler` 使用
+adjoint 方法：每個波長只要一次頻域求解（`orf.fdfd2D`）加一次伴隨求解，就能得到所有像素的梯度。
+
+```matlab
+p = struct('process', "overlay", 'thetaDeg', 10, 'lambdas', 1.55);   % stack: gratingCouplerTE defaults
+res = orf.inverseDesignGratingCoupler(p, MinFeature=0.10, Progress=orf.progressText());
+res.eta, res.x0                                  % coupling, fiber position from the grating start
+fd = orf.gratingCouplerTE(struct('layout', res.layout, 'lambdas', 1.55));   % FDTD check
+eta = orf.fiberCoupling(fd, deg2rad(10), 4 + res.x0, 5.2)
+res.masks                                        % openings / overlay per mask, for GDSII
+```
+
+| Step | English | 中文 |
+|---|---|---|
+| 1 | Choose the process: `shallow` (one etch; at most ~57 % goes up, the rest leaks into the substrate) or `overlay` (etch + poly-Si; ~93 % up). Fix the stack, fiber angle and design wavelengths; several wavelengths trade peak for bandwidth. The fiber position is optimised too. | 選製程：`shallow`（單次蝕刻，最多約 57% 往上，其餘漏進基板）或 `overlay`（蝕刻＋多晶矽，約 93% 往上）。固定疊層、光纖角度與設計波長；多個波長會用峰值換頻寬。光纖位置也會一起最佳化。 |
+| 2 | Set `MinFeature` to your lithography limit; the filter and the final clean-up enforce it. | `MinFeature` 設成微影極限；濾波與最後的清理會確保不小於它。 |
+| 3 | The design starts grey and is pushed to 0/1 in stages (`Betas`); a polish stage repairs what the feature clean-up breaks. Compare `res.etaGrey` with `res.eta`. | 設計從灰階開始，分階段（`Betas`）推向 0/1；最後的 polish 階段修補清除小特徵造成的損失。可比較 `res.etaGrey` 與 `res.eta`。 |
+| 4 | Always check the final binary design with the FDTD (an independent solver), as in the example. | 最後的二值設計一定要用 FDTD（獨立求解器）驗證，見範例。 |
+
+Example: `examples/inverse_design_grating_coupler.m`.
+
+範例：`examples/inverse_design_grating_coupler.m`。
+
+---
+
+## 9. Which example should I read? · 該看哪個範例
 
 | I want to … | 我想要… | Example |
 |---|---|---|
@@ -246,13 +279,14 @@ PATH 元件（波導、導線）會轉成斜接轉角的多邊形。輸出佈局
 | design a narrow-band resonant filter | 設計窄頻共振濾波器 | `gmr_filter.m` |
 | find waveguide modes and group index | 求波導模態與群折射率 | `waveguide_modes_soi.m` |
 | design a fiber grating coupler | 設計光纖光柵耦合器 | `cpo_grating_coupler_1550.m` |
+| inverse-design a grating coupler (adjoint) | 用反向設計（adjoint）做光柵耦合器 | `inverse_design_grating_coupler.m` |
 | optimise an apodized coupler | 最佳化漸變光柵耦合器 | `cpo_grating_optimize.m` |
 | automate studies (estimates, sweeps) | 自動化研究（估算、掃描） | `workflow_scripting.m` |
 | export masks | 輸出光罩 | `export_gds.m` |
 
 ---
 
-## 9. Troubleshooting · 常見問題
+## 10. Troubleshooting · 常見問題
 
 | Symptom | Cause and fix | 原因與解法 |
 |---|---|---|

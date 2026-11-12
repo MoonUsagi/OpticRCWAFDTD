@@ -12,7 +12,11 @@
 %     progress [] (callback, see fdtd2D),
 %     sidewall 90 (groove wall angle [deg]; below 90 the groove narrows
 %     with depth, ff staying the unetched fraction at the top surface,
-%     i.e. the mask; drawn as 1/4-cell steps, smoothed by sub-sampling).
+%     i.e. the mask; drawn as 1/4-cell steps, smoothed by sub-sampling),
+%     layout [] (any cross-section instead of period/ff: struct with boxes,
+%     K x 5 [x1 x2 z1 z2 n] painted over the SOI stack, and length, the
+%     grating length from x = 4; e.g. res.layout of
+%     orf.inverseDesignGratingCoupler for multi-etch or overlay designs).
 %   Geometry: Si core z in [0, tSi], BOX below, cladding above; grooves
 %   of depth etch at the top of the core. Grating starts at x = 4 um.
 %

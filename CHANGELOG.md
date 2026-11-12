@@ -1,5 +1,24 @@
 # Changelog
 
+## 0.3.0 — inverse design
+
+- Inverse design of grating couplers with the adjoint method:
+  `orf.inverseDesignGratingCoupler`. Every pixel of every mask and the
+  fiber position are design variables; filtering, projection, minimum
+  feature size, and a polish stage give fabricable binary designs.
+  Processes: single shallow etch, shallow etch + poly-Si overlay, and an
+  experimental dual (shallow + full) etch.
+- Results (220 nm SOI, 2 um BOX, SMF-28 at 10 deg, 100 nm minimum feature,
+  checked with the FDTD): single 70 nm etch 52.6 % (-2.79 dB);
+  with a 160 nm poly-Si overlay 87.6 % (-0.58 dB).
+- `orf.fdfd2D`: frequency-domain 2D TE solver with stretched-coordinate
+  PML and adjoint solves; agrees with the FDTD to 1e-4 on the same grid.
+- `orf.gratingCouplerTE` accepts any cross-section (`p.layout`).
+- `orf.gratingToGDS` accepts a period that starts with a groove (ff = 0).
+- Example `inverse_design_grating_coupler.m`; tests for the gradient
+  (all processes, 2e-7 vs finite differences), FDFD vs FDTD, and the
+  optimised designs.
+
 ## 0.2.0 — materials in the apps, GDS paths, tutorial and new examples
 
 - Apps: pillar, substrate, Si, BOX and cladding accept a built-in material
